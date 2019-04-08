@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import time
 
 
 def Brownian(seed, N):
@@ -34,6 +35,7 @@ def GBM(s0, mu, sigma, W, N, t):
 
 
 def make_GBM_paths(paths=10, N=500, mu_range=(-0.5, 0.5), sigma_range=(0.1, 0.5), plot=False, save=True):
+    start = time.time()
     mu = np.random.uniform(mu_range[0], mu_range[1], paths)
     sigma = np.random.uniform(sigma_range[0], sigma_range[1], paths)
 
@@ -62,9 +64,13 @@ def make_GBM_paths(paths=10, N=500, mu_range=(-0.5, 0.5), sigma_range=(0.1, 0.5)
         params.to_csv('params.csv', sep='\t', index=False)
         GBM_path.to_csv('GBM_paths.csv', sep='\t', index=False, header=False)
 
-    if plot:
+    if plot and N <= 100:
         plt.legend(fontsize='small')
         plt.show()
+    else:
+        print("More than 100 GBM paths generated, skipping plotting")
+    end = time.time()
+    print("Run in {0}s".format(np.round(end - start, 2)))
 
 
 make_GBM_paths(plot=True)
